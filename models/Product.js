@@ -9,10 +9,7 @@ const ProductSchema = new mongoose.Schema({
     category : {type: String,required:true},
     subcategory : {type: String},
     poster:{type:String,required:true},
-    gallery:[{type:String,required:true}],
-   // height : {type:Array,required:true},
-   // width : {type:Array,required:true},
-    variants : [{color:{type:String,required:true},colorcode:{type:String,required:true},img:{type:String,required:true}, price : {type: Number, required:true}}],
+    variants : [{color:{type:String,required:true},colorcode:{type:String,required:true},img:[{type:String,required:true}], price : {type: Number, required:true}}],
     sub:{type:Boolean}
 },{timestamps:true});
 mongoose.models={}

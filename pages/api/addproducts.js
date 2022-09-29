@@ -17,13 +17,9 @@ const handler = async (req, res) => {
                 desc: req.body[i].desc,
                 slug:req.body[i].slug,
                 care: req.body[i].care,
-                gallery: req.body[i].gallery,
                 variants:req.body[i].variants.map((j)=>{return{color:j.color,colorcode:j.colorcode,img:j.img,  price: j.price}}),
                 category: req.body[i].category,
                 subcategory: req.body[i].subcategory,
-               // height: req.body[i].height,
-              //  width: req.body[i].width,
-              
                 poster: req.body[i].poster,
                 sub:sub,
 

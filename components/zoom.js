@@ -96,7 +96,7 @@ const [left, setleft] = useState(false);
   
        {left && <div
           className=" overflow-hidden drop-shadow-2xl backdrop-blur-2xl border-2 z-30  bg-white "
-          // ref={imagePreviewRefContainer}
+          //ref={imagePreviewRefContainer}
   
           style={{
             

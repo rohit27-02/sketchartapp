@@ -37,7 +37,6 @@ const Post = ({ buyNow,  addToCart, product ,m1,m2,m3,m4}) => {
   const [motor, setmotor] = useState(null);
 
   const [recomendedmotors, setrecomendedmotors] = useState([]);
-  const [showgallery, setshowgallery] = useState(false);
   const [index, setindex] = useState(0);
   const [i, seti] = useState(0);
 
@@ -89,15 +88,17 @@ useEffect(() => {
 }, [selectedexactwidth,selectedwidth]);
 
   useEffect(() => {
+    setindex(0);
     document.getElementById(prevcolor).classList.remove("border-2")
     setprevcolor(selectedcolor)
+    Object.keys(product.variants[selectedcolor].img).map((p,d)=>seti(d));
   }, [selectedcolor]);
   useEffect(() => {
     if (screen.width > 768) {
       setsw(true)
     }
     document.getElementById(0).classList.add("border-2")
-    Object.keys(product.variants).map((p,d)=>seti(d));
+    
 
   }, []);
 
@@ -186,9 +187,15 @@ useEffect(() => {
         <div  className='w-full  flex-col justify-center md:flex-row flex '>
           <div style={{ backgroundColor: "#ebeaeb"}} className='md:w-5/12 pt-10 md:pt-0 w-full'>
           
-          
-       
-           {sw && <AppWithZoomCustomization   image={product.variants[selectedcolor].img}/>  }
+
+
+            {sw && <div >
+              <div className='h-[42vw]  cursor-pointer absolute top-[55vw]  z-30 flex items-center  text-[3vw]    text-white transition-all duration-150 hover:scale-125 hover:shadow-2xl'  onClick={() => setindex(index == 0 ? 0 : index - 1)}><AiOutlineLeft className='' /></div>
+              <AppWithZoomCustomization image={product.variants[selectedcolor].img[index]} />
+              <div className='h-[42vw] cursor-pointer absolute top-[55vw] z-30 flex items-center  text-[3vw] left-[44.5vw]   text-white transition-all duration-150 hover:scale-125 hover:shadow-2xl ' onClick={() => setindex(index == i ? index : index + 1)}><AiOutlineRight  className='' /></div>
+              </div>}
+           
+           
            {!sw && <img src={product.variants[selectedcolor].img} className=" scale-75"></img>}
      
             
@@ -224,17 +231,7 @@ useEffect(() => {
             <span style={sw?{fontFamily: "'Fjalla One', sans-serif",fontSize:"3.8vw"}:{fontFamily: "'Fjalla One', sans-serif",fontSize:"3.8vh"}} className="  text-5xl uppercase ">{product.title} </span>
             <div style={sw?{fontSize:"1.25vw",padding:"1.875vw 0vw"}:{fontSize:"1.5vh",padding:"1.875vh 0vh"}} className='space-x-6 flex py-6  text-base'>
               <a href='#details' className='cursor-pointer flex items-center  space-x-3  pr-4 border-black underline underline-offset-2 '><BsInfoCircleFill /><span>Product Details</span></a>
-              <button onClick={()=>setshowgallery(true)} className='cursor-pointer flex items-center  space-x-3  pr-4 border-black underline underline-offset-2 '><BsImages /><span>Product Gallery</span></button>
-              <Dialog style={{ width: "100vw", height: "100vh" }} className="fixed bg-black flex justify-center items-center top-0   bg-opacity-60 z-50" open={showgallery} onClose={() => setshowgallery(false)}>
-                        <Dialog.Panel > 
-                        <div style={sw?{padding:"2vw"}:{padding:"0vw 0vw"}} className='h-[90vh] w-[80vw] flex justify-evenly items-center text-[4vw] bg-white '>
-                        <AiOutlineLeft onClick={()=>setindex(index==0?0:index-1)} className='cursor-pointer hover:border-2 border-[#bfb1c4] text-gray-700 transition-all duration-150 rounded-full hover:bg-[#bfb1c4]'/>
-                        <img className='h-[90vh]' src={product.variants[index].img}></img>
-                        <AiOutlineRight onClick={()=>setindex(index==i?index:index+1)} className='cursor-pointer hover:border-2 border-[#bfb1c4] text-gray-700 transition-all duration-150 rounded-full hover:bg-[#bfb1c4]'/>
-
-                        </div>
-                        </Dialog.Panel>
-                      </Dialog>
+           
             </div>
            
             <div style={sw?{padding:"0vw 2.5vw",marginBottom:"1.875vw"}:{padding:"0vh 2.5vh",marginBottom:"1.875vh"}} className="  w-full px-8 mb-6 bg-white  ">
