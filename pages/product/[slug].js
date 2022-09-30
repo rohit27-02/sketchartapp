@@ -12,7 +12,7 @@ import { MdOutlineCancel } from "react-icons/md"
 import { BsInfoCircleFill } from "react-icons/bs"
 import { BsImages } from "react-icons/bs"
 import { AiOutlinePlus,AiOutlineMinus,AiOutlineLeft,AiOutlineRight } from 'react-icons/ai';
-import { Router } from 'next/router';
+import  Router  from 'next/router';
 import Motor from '../../models/Motor'
 import AppWithZoomCustomization from "../../components/zoom"
 
@@ -31,6 +31,7 @@ const Post = ({ buyNow,  addToCart, product ,m1,m2,m3,m4}) => {
   const [isenable, setisenable] = useState(false);
   const [mechanism, setmechanism] = useState("Manual");
   const [qty, setqty] = useState(1);
+  const [wood, setwood] = useState(false);
 
   const [sw, setsw] = useState(false);
   const [withmotor, setwithmotor] = useState(false);
@@ -98,7 +99,9 @@ useEffect(() => {
       setsw(true)
     }
     document.getElementById(0).classList.add("border-2")
-    
+    if(Router.isReady==true){
+    if(Router.asPath=="/product/Wooden%20Venetian/") setwood(true)
+    }
 
   }, []);
 
@@ -235,7 +238,7 @@ useEffect(() => {
             </div>
            
             <div style={sw?{padding:"0vw 2.5vw",marginBottom:"1.875vw"}:{padding:"0vh 2.5vh",marginBottom:"1.875vh"}} className="  w-full px-8 mb-6 bg-white  ">
-              <div style={sw?{fontSize:"1.25vw",marginTop:"1.25vw"}:{fontSize:"2vh",marginTop:"1.25vh"}} className='  font-medium mt-4  flex items-center'><p style={sw?{backgroundColor: "#bfb1c4", fontFamily: "'poppins', sans-serif",height:"1vw",width:"2.75vw",marginLeft:"-3.2vw"}:{backgroundColor: "#bfb1c4", fontFamily: "'poppins', sans-serif",height:"1vh",width:"2.75vh",marginLeft:"-3.2vh"}}  className='w-8 -ml-10 absolute h-3'></p>Color Selection</div>
+              <div style={sw?{fontSize:"1.25vw",marginTop:"1.25vw"}:{fontSize:"2vh",marginTop:"1.25vh"}} className='  font-medium mt-4  flex items-center'><p style={sw?{backgroundColor: "#bfb1c4", fontFamily: "'poppins', sans-serif",height:"1vw",width:"2.75vw",marginLeft:"-3.2vw"}:{backgroundColor: "#bfb1c4", fontFamily: "'poppins', sans-serif",height:"1vh",width:"2.75vh",marginLeft:"-3.2vh"}}  className='w-8 -ml-10 absolute h-3'></p>Color Selection{wood && <div className='flex justify-around w-4/6 '><p className='hover:cursor-pointer hover:font-bold underline underline-offset-4'>35MM</p><option className='hover:cursor-pointer hover:font-bold underline underline-offset-4'>50MM</option></div>}</div>
               <div style={sw?{height:"30vw"}:{height:"30vh",marginTop:"2vh"}} className='flex justify-center overflow-y-scroll '>
               <div className='  grid grid-flow-row w-full  grid-cols-2 2xl:grid-cols-3'>
                 {
