@@ -190,9 +190,9 @@ useEffect(() => {
 
 
             {sw && <div >
-              <div className='h-[42vw]  cursor-pointer absolute top-[55vw]  z-30 flex items-center  text-[3vw]    text-white transition-all duration-150 hover:scale-125 hover:shadow-2xl'  onClick={() => setindex(index == 0 ? 0 : index - 1)}><AiOutlineLeft className='' /></div>
+              <div className='h-[50.6vw]  cursor-pointer absolute top-[51.5vw]  z-30 flex items-center   text-[3vw] left-[7.3vw] opacity-70 hover:backdrop-blur-sm hover:opacity-100  text-white transition-all duration-150   '  onClick={() => setindex(index == 0 ? 0 : index - 1)}><AiOutlineLeft className='mx-[0.5vw]' /></div>
               <AppWithZoomCustomization image={product.variants[selectedcolor].img[index]} />
-              <div className='h-[42vw] cursor-pointer absolute top-[55vw] z-30 flex items-center  text-[3vw] left-[44.5vw]   text-white transition-all duration-150 hover:scale-125 hover:shadow-2xl ' onClick={() => setindex(index == i ? index : index + 1)}><AiOutlineRight  className='' /></div>
+              <div className='h-[50.6vw] cursor-pointer absolute top-[51.5vw] z-30 flex items-center   text-[3vw] left-[43.4vw] opacity-70 hover:backdrop-blur-sm hover:opacity-100 text-white transition-all duration-150   ' onClick={() => setindex(index == i ? index : index + 1)}><AiOutlineRight  className='mx-[0.5vw]' /></div>
               </div>}
            
            
