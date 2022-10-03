@@ -249,6 +249,7 @@ const adminpanel = ({ logout, remotes, motors, switches, products, users, info, 
     setindex(e.currentTarget.value)
     seti2(products[e.currentTarget.value]._id)
     setpid(products[e.currentTarget.value].variants[e.currentTarget.id]._id)
+    setvariants(products[e.currentTarget.value].variants)
     setcolor(products[e.currentTarget.value].variants[e.currentTarget.id].color)
     setprice(products[e.currentTarget.value].variants[e.currentTarget.id].price)
     setimg(products[e.currentTarget.value].variants[e.currentTarget.id].img)
@@ -267,6 +268,9 @@ const changeimg=async(e)=>{
       }, body: JSON.stringify({ i2,pid, data })
     })
     Router.push("/adminpanel")
+}
+const removeimg=(e)=>{
+  variants[i].img.splice(e.currentTarget.id,1)
 }
 
   const handleSubmit = async (e) => {
@@ -841,7 +845,7 @@ const changeimg=async(e)=>{
                         </div>
                       </div>
                       <div className='w-full flex '>
-                          {Object.keys(products[index].variants[i].img).map((p)=>{return <img className='w-[6vw] h-auto' key={p} src={products[index].variants[i].img[p]}></img>})}
+                          {Object.keys(variants[i].img).map((p)=>{return <div className='ml-[0.5vw]'  key={p}><MdCancel id={p} onClick={(e)=>removeimg(e)} className='cursor-pointer'/><img className='w-[6vw]  h-auto'  src={variants[i].img[p]}></img></div>})}
                         </div>
                    
                       <button onClick={(e)=>changeimg(e)} className="shadow mt-[2vw] bg-yellow-400 p-[1vw] hover:bg-yellow-300 focus:shadow-outline focus:outline-none text-white font-bold rounded" type="submit">

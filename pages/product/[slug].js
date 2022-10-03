@@ -274,7 +274,7 @@ useEffect(() => {
               <button style={sw?{ backgroundColor: "#bfb1c4" ,fontSize:"1.1vw",width:"8.75vw",height:"2.8125vw"}:{ backgroundColor: "#bfb1c4" ,fontSize:"1.5vh",width:"10vh",height:"3.5vh"}} onClick={() => { addToCart(product.slug, qty, product.price, product.title,cartheight, cartwidth, product.variants[selectedcolor].color, motor ,product.variants[selectedcolor].img) }} className="flex items-center   border-0 md:py-2 py-1 w-28 justify-center focus:outline-none text-white  ">Add to cart</button>
               </div>
             </div>
-              <div className='mb-[1.875vw] text-[1vw]'>( Inclusive all tax )</div>
+              <div className='mb-[1.875vw] text-[1vw]'>( *Gst Inclusive )</div>
             </div>
             </div>
 
