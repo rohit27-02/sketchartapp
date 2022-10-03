@@ -19,7 +19,7 @@ import AppWithZoomCustomization from "../../components/zoom"
 
 
 
-const Post = ({ buyNow,  addToCart, product ,m1,m2,m3,m4}) => {
+const Post = ({ buyNow, data,data1, addToCart, product ,m1,m2,m3,m4}) => {
   const [selectedheight, setselectedheight] = useState(2 );
   const [cartheight, setcartheight] = useState(2 );
   const [cartwidth, setcartwidth] = useState(2 );
@@ -32,6 +32,7 @@ const Post = ({ buyNow,  addToCart, product ,m1,m2,m3,m4}) => {
   const [mechanism, setmechanism] = useState("Manual");
   const [qty, setqty] = useState(1);
   const [wood, setwood] = useState(false);
+  const [type, settype] = useState("35mm");
 
   const [sw, setsw] = useState(false);
   const [withmotor, setwithmotor] = useState(false);
@@ -101,9 +102,11 @@ useEffect(() => {
     document.getElementById(0).classList.add("border-2")
     if(Router.isReady==true){
     if(Router.asPath=="/product/Wooden%20Venetian/") setwood(true)
+
     }
 
   }, []);
+
 
   const measuringguide = () => {
     setisenable(!isenable)
@@ -238,12 +241,18 @@ useEffect(() => {
             </div>
            
             <div style={sw?{padding:"0vw 2.5vw",marginBottom:"1.875vw"}:{padding:"0vh 2.5vh",marginBottom:"1.875vh"}} className="  w-full px-8 mb-6 bg-white  ">
-              <div style={sw?{fontSize:"1.25vw",marginTop:"1.25vw"}:{fontSize:"2vh",marginTop:"1.25vh"}} className='  font-medium mt-4  flex items-center'><p style={sw?{backgroundColor: "#bfb1c4", fontFamily: "'poppins', sans-serif",height:"1vw",width:"2.75vw",marginLeft:"-3.2vw"}:{backgroundColor: "#bfb1c4", fontFamily: "'poppins', sans-serif",height:"1vh",width:"2.75vh",marginLeft:"-3.2vh"}}  className='w-8 -ml-10 absolute h-3'></p>Color Selection{wood && <div className='flex justify-around w-4/6 '><p className='hover:cursor-pointer hover:font-bold underline underline-offset-4'>35MM</p><option className='hover:cursor-pointer hover:font-bold underline underline-offset-4'>50MM</option></div>}</div>
+              <div style={sw?{fontSize:"1.25vw",marginTop:"1.25vw"}:{fontSize:"2vh",marginTop:"1.25vh"}} className='  font-medium mt-4  flex items-center'><p style={sw?{backgroundColor: "#bfb1c4", fontFamily: "'poppins', sans-serif",height:"1vw",width:"2.75vw",marginLeft:"-3.2vw"}:{backgroundColor: "#bfb1c4", fontFamily: "'poppins', sans-serif",height:"1vh",width:"2.75vh",marginLeft:"-3.2vh"}}  className='w-8 -ml-10 absolute h-3'></p>Color Selection
+              {wood && <div className='flex justify-around w-4/6 '><p className='hover:cursor-pointer hover:font-bold underline underline-offset-4' onClick={()=>settype("35mm")}>35MM</p><option className='hover:cursor-pointer hover:font-bold underline underline-offset-4' onClick={()=>settype("50mm")}>50MM</option></div>}
+              </div>
               <div style={sw?{height:"30vw"}:{height:"30vh",marginTop:"2vh"}} className='flex justify-center overflow-y-scroll '>
               <div className='  grid grid-flow-row w-full  grid-cols-2 2xl:grid-cols-3'>
                 {
+                  !wood && Object.keys(product.variants).map((p) => { return <div key={p} ><div id={p} onClick={(e) => { selectcolor(e) }} style={sw?{ backgroundImage: `url(${product.variants[p].colorcode})`, borderColor: "red",height:"20vh",width:"10vw"}:{ backgroundImage: `url(${product.variants[p].colorcode})`, borderColor: "red",height:"20vw",width:"10vh"}} className="  mt-8  cursor-pointer "></div><span style={sw?{fontSize:"1.1vw"}:{fontSize:"1.1vh"}}>{product.variants[p].color}</span></div> })
 
-                  Object.keys(product.variants).map((p) => { return <div key={p} ><div id={p} onClick={(e) => { selectcolor(e) }} style={sw?{ backgroundImage: `url(${product.variants[p].colorcode})`, borderColor: "red",height:"20vh",width:"10vw"}:{ backgroundImage: `url(${product.variants[p].colorcode})`, borderColor: "red",height:"20vw",width:"10vh"}} className="  mt-8  cursor-pointer "></div><span style={sw?{fontSize:"1.1vw"}:{fontSize:"1.1vh"}}>{product.variants[p].color}</span></div> })}
+                  // :type=="35mm"?Object.keys(Product.variants).map((p) => { return <div key={p} ><div id={p} onClick={(e) => { selectcolor(e) }} style={sw?{ backgroundImage: `url(${data[p].colorcode})`, borderColor: "red",height:"20vh",width:"10vw"}:{ backgroundImage: `url(${data[p].colorcode})`, borderColor: "red",height:"20vw",width:"10vh"}} className="  mt-8  cursor-pointer "></div><span style={sw?{fontSize:"1.1vw"}:{fontSize:"1.1vh"}}>{data[p].color}</span></div> }):
+                  // Object.keys(data1).map((p) => { return <div key={p} ><div id={p} onClick={(e) => { selectcolor(e) }} style={sw?{ backgroundImage: `url(${data1[p].colorcode})`, borderColor: "red",height:"20vh",width:"10vw"}:{ backgroundImage: `url(${data1[p].colorcode})`, borderColor: "red",height:"20vw",width:"10vh"}} className="  mt-8  cursor-pointer "></div><span style={sw?{fontSize:"1.1vw"}:{fontSize:"1.1vh"}}>{data1[p].color}</span></div> })
+                }
+              
               </div>
               </div>
 
@@ -256,14 +265,16 @@ useEffect(() => {
                 </div>
                 </div>
              
-              <div style={sw?{margin:"1.875vw 0vw",paddingTop:"1.6vw"}:{margin:"1.875vh 0vw",paddingTop:"1.6vh"}} className="flex flex-col md:flex-row justify-between items-center my-6 pt-5">
+              <div style={sw?{marginTop:"1.875vw 0vw",paddingTop:"1.6vw"}:{marginTop:"1.875vh 0vw",paddingTop:"1.6vh"}} className="flex flex-col md:flex-row justify-between items-center  pt-5">
               <div style={sw?{fontSize:"1.25vw"}:{fontSize:"1.5vh"}}> Your Price
-              <span style={sw?{fontFamily: "'Fjalla One', sans-serif",fontSize:"1.58vw"}:{fontFamily: "'Fjalla One', sans-serif",fontSize:"2vh"}} className="title-font ml-4  text-xl text-gray-900">₹ {product.variants[selectedcolor].price*qty}</span></div>
+              <span style={sw?{fontFamily: "'Fjalla One', sans-serif",fontSize:"1.58vw"}:{fontFamily: "'Fjalla One', sans-serif",fontSize:"2vh"}} className="title-font ml-4  text-xl text-gray-900">₹ {product.variants[selectedcolor].price*qty}</span>
+              </div>
               <div className='flex space-x-4 mt-4 md:mt-0'>
               <button style={sw?{ backgroundColor: "#bfb1c4" ,fontSize:"1.1vw",width:"8.75vw",height:"2.8125vw"}:{ backgroundColor: "#bfb1c4" ,fontSize:"1.5vh",width:"10vh",height:"3.5vh"}} className="flex items-center border-0 md:py-2 py-1 w-28 justify-center focus:outline-none text-white " onClick={() => { buyNow(product.slug,qty, product.price, product.title, cartheight, cartwidth, product.variants[selectedcolor].color,motor ,product.variants[selectedcolor].img) }}>Buy now</button>
               <button style={sw?{ backgroundColor: "#bfb1c4" ,fontSize:"1.1vw",width:"8.75vw",height:"2.8125vw"}:{ backgroundColor: "#bfb1c4" ,fontSize:"1.5vh",width:"10vh",height:"3.5vh"}} onClick={() => { addToCart(product.slug, qty, product.price, product.title,cartheight, cartwidth, product.variants[selectedcolor].color, motor ,product.variants[selectedcolor].img) }} className="flex items-center   border-0 md:py-2 py-1 w-28 justify-center focus:outline-none text-white  ">Add to cart</button>
               </div>
             </div>
+              <div className='mb-[1.875vw] text-[1vw]'>( Inclusive all tax )</div>
             </div>
             </div>
 
@@ -415,10 +426,17 @@ export async function getServerSideProps(context) {
   let m2 = await Motor.find({ subcategory:{$in:["DM35-RL-6/28","DM35-FY-6/28","DM35-SL-6/30"]} })
   let m3 = await Motor.find({ subcategory:"DM35-FY-6/28" })
   let m4 = await Motor.find({ subcategory:"DM35-SL-6/30" })
+  let data={}
+  let data1={}
+  // if(context.query.slug=="Wooden Venetian"){
+  //   data= await Product.find({ title: context.query.slug }).distinct("variants",{variants:{$exists:true}}).find({colorcode:{$exists:true},img:{$exists:true},price:{$exists:true},color:{$exists:true},$expr:{$gt:[{$strLenCP:'color'},3]}})
+  //    data1= await Product.find({ title: context.query.slug }).distinct("variants",{variants:{$exists:true}}).find({colorcode:{$exists:true},img:{$exists:true},price:{$exists:true},color:{$exists:true},$expr:{$gt:[{$strLenCP:'color'},3]}})
+  
 
-
+  // }
+console.log(data,data1)
   return {
-    props: { product: JSON.parse(JSON.stringify(product)),m1:JSON.parse(JSON.stringify(m1)),m2:JSON.parse(JSON.stringify(m2)),m3:JSON.parse(JSON.stringify(m3)),m4:JSON.parse(JSON.stringify(m4)) }, // will be passed to the page component as props
+    props: { data: JSON.parse(JSON.stringify(data)),data1: JSON.parse(JSON.stringify(data1)),product: JSON.parse(JSON.stringify(product)),m1:JSON.parse(JSON.stringify(m1)),m2:JSON.parse(JSON.stringify(m2)),m3:JSON.parse(JSON.stringify(m3)),m4:JSON.parse(JSON.stringify(m4)) }, // will be passed to the page component as props
   }
 }
 

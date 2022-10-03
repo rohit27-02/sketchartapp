@@ -62,6 +62,9 @@ const adminpanel = ({ logout, remotes, motors, switches, products, users, info, 
   const [product, setproduct] = useState("blind");
   const [type, settype] = useState("");
   const [drop, setdrop] = useState(false);
+  const [ui, setui] = useState(false);
+  const [i, seti] = useState();
+  const [i2, seti2] = useState();
 
   const ID = "AKIA6QMMEE6ODDBYMP77";
   const SECRET = "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";
@@ -240,6 +243,31 @@ const adminpanel = ({ logout, remotes, motors, switches, products, users, info, 
   function openModal4() {
     setIsOpen4(true)
   }
+
+  const updateimg=async(e)=>{
+    seti(e.currentTarget.id);
+    setindex(e.currentTarget.value)
+    seti2(products[e.currentTarget.value]._id)
+    setpid(products[e.currentTarget.value].variants[e.currentTarget.id]._id)
+    setcolor(products[e.currentTarget.value].variants[e.currentTarget.id].color)
+    setprice(products[e.currentTarget.value].variants[e.currentTarget.id].price)
+    setimg(products[e.currentTarget.value].variants[e.currentTarget.id].img)
+    setcolorcode(products[e.currentTarget.value].variants[e.currentTarget.id].colorcode)
+    setui(true)
+
+  }
+const changeimg=async(e)=>{
+  e.preventDefault()
+  const data = [{ color,colorcode,img,price}]
+
+    let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/updateimg`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      }, body: JSON.stringify({ i2,pid, data })
+    })
+    Router.push("/adminpanel")
+}
 
   const handleSubmit = async (e) => {
 
@@ -642,9 +670,6 @@ const adminpanel = ({ logout, remotes, motors, switches, products, users, info, 
       progress: undefined,
     });
   }
-useEffect(() => {
- console.log(img)
-}, [img]);
 
   async function uploadposter() {
 
@@ -727,21 +752,16 @@ useEffect(() => {
     setvariants(arr => [...arr, { color: color, colorcode: colorcode, img: img ,price:price}])
     document.getElementById("colorcode").value = ""
     document.getElementById("img").value = ""
-  }
-
-  useEffect(() => {
     setcolor("")
     setimg([])
     setprice(0)
     setcolorcode("")
-  }, [variants]);
-
+  }
   function addfeature() {
 
     setfeatures(arr => [...arr, feature])
 
   }
-
   useEffect(() => {
     setfeature("")
   }, [features]);
@@ -772,6 +792,64 @@ useEffect(() => {
           pauseOnHover
         />
 
+{ui && <div className='fixed h-[100vh] z-50 w-[100vw]   flex justify-center items-center '>
+   <form>
+    <MdCancel className='absolute text-[2vw] mt-[0.5vw] cursor-pointer right-[35vw]' onClick={()=>{setui(false);closeModal();}} />
+   <div className='flex flex-col p-[1vw] bg-white border-2 border-black pt-6'>
+                        <div className="md:flex  md:items-center mb-6">
+                          <div className="">
+                            <label className="block text-gray-500 font-bold text-center mb-1 md:mb-0 pr-4" htmlFor="color">
+                              Color
+                            </label>
+                          </div>
+                          <div className="">
+                            <input value={color} onChange={(e) => handleChange(e)} className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-yellow-500" id="color" type="text" />
+
+                          </div>
+                        </div>
+                        <div className="md:flex md:items-center mb-6">
+                          <div className="">
+                            <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" htmlFor="colorcode">
+                              colorcode
+                            </label>
+                          </div>
+                          <div className="">
+                            <input onChange={uploadposter} className="" id="colorcode" type="file" accept='image/*' />
+
+                          </div>
+                        </div>
+                       
+                        <div className="md:flex md:items-center  mb-6">
+                          <div className="">
+                            <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" htmlFor="img">
+                              Image
+                            </label>
+                          </div>
+                          <div className="">
+                            <input onChange={(e) => upload(e)} type="file" id="img" multiple="multiple" accept="image/*" />
+
+                          </div>
+                        </div>
+                        <div className="md:flex md:items-center mb-6">
+                        <div className="">
+                          <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" htmlFor="price">
+                            Price
+                          </label>
+                        </div>
+                        <div className="">
+                          <input value={price} onChange={(e) => handleChange(e)} className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-yellow-500" id="price" type="number" />
+                        </div>
+                      </div>
+                      <div className='w-full flex '>
+                          {Object.keys(products[index].variants[i].img).map((p)=>{return <img className='w-[6vw] h-auto' key={p} src={products[index].variants[i].img[p]}></img>})}
+                        </div>
+                   
+                      <button onClick={(e)=>changeimg(e)} className="shadow mt-[2vw] bg-yellow-400 p-[1vw] hover:bg-yellow-300 focus:shadow-outline focus:outline-none text-white font-bold rounded" type="submit">
+                              update 
+                            </button>
+                      </div>
+  </form>
+  </div>}
 
         <Transition appear show={isOpen} as={Fragment}>
           <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -1414,7 +1492,7 @@ useEffect(() => {
                           {products[p].subcategory}
                         </td>
                         <td className="  flex justify-center overflow-y-scroll h-[17vw]">
-                          <div className='  grid grid-flow-row w-full  grid-cols-2   '>{products[p].variants.map((i) => { return <div className='mb-[2vw] h-[15vw] w-[10vw]' key={i}><img src={i.img[0]} />{i.color}<br></br><span className='drop-shadow-xl bg-yellow-300 px-[0.5vw]'>₹ {i.price}</span></div> })}</div>
+                          <div className='  grid grid-flow-row w-full  grid-cols-2   '>{products[p].variants.map((i,m) => { return <div className='mb-[2vw] h-[15vw] w-[10vw]' key={i}><button className='cursor-pointer  -mb-[1.5vw] ml-[10.5vw] ' value={p} id={m} onClick={(e)=>{updateimg(e);}}><MdCancel/></button><img  src={i.img[0]} />{i.color}<br></br><span className='drop-shadow-xl bg-yellow-300 px-[0.5vw]'>₹ {i.price}</span></div> })}</div>
                         </td>
                         <td className="text-xl text-gray-900 font-light px-6 py-4 whitespace-nowrap">
 
