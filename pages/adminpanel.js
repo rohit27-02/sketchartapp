@@ -65,7 +65,6 @@ const adminpanel = ({ logout, remotes, motors, switches, products, users, info, 
   const [ui, setui] = useState(false);
   const [i, seti] = useState();
   const [i2, seti2] = useState();
-
   const ID = "AKIA6QMMEE6ODDBYMP77";
   const SECRET = "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";
   const BUCKET_NAME = 'sketchartphotos';

@@ -10,7 +10,6 @@ import { Disclosure, Dialog } from '@headlessui/react'
 import { IoIosArrowDown } from "react-icons/io"
 import { MdOutlineCancel } from "react-icons/md"
 import { BsInfoCircleFill } from "react-icons/bs"
-import { BsImages } from "react-icons/bs"
 import { AiOutlinePlus,AiOutlineMinus,AiOutlineLeft,AiOutlineRight } from 'react-icons/ai';
 import  Router  from 'next/router';
 import Motor from '../../models/Motor'
@@ -82,9 +81,11 @@ const Post = ({ buyNow, data,data1, addToCart, product ,m1,m2,m3,m4}) => {
     document.getElementById(e.target.id).classList.add("border-2")
 
   }
+
 useEffect(() => {
  setcartheight(`${selectedheight}${selectedexactheight}`)
 }, [selectedexactheight,selectedheight]);
+
 useEffect(() => {
  setcartwidth(`${selectedwidth}${selectedexactwidth}`)
 }, [selectedexactwidth,selectedwidth]);
@@ -93,8 +94,11 @@ useEffect(() => {
     setindex(0);
     document.getElementById(prevcolor).classList.remove("border-2")
     setprevcolor(selectedcolor)
-    Object.keys(product.variants[selectedcolor].img).map((p,d)=>seti(d));
+    !wood ? Object.keys(product.variants[selectedcolor].img).map((p,d)=>seti(d)) : type=="35mm" ? Object.keys(data[selectedcolor].img).map((p,d)=>seti(d)) :  Object.keys(data1[selectedcolor].img).map((p,d)=>seti(d));
+
   }, [selectedcolor]);
+
+
   useEffect(() => {
     if (screen.width > 768) {
       setsw(true)
@@ -102,7 +106,6 @@ useEffect(() => {
     document.getElementById(0).classList.add("border-2")
     if(Router.isReady==true){
     if(Router.asPath=="/product/Wooden%20Venetian/") setwood(true)
-
     }
 
   }, []);
@@ -197,12 +200,12 @@ useEffect(() => {
 
             {sw && <div >
               <div className='h-[50.6vw]  cursor-pointer absolute top-[51.5vw]  z-30 flex items-center   text-[3vw] left-[7.3vw] opacity-70 hover:backdrop-blur-sm hover:opacity-100  text-white transition-all duration-150   '  onClick={() => setindex(index == 0 ? 0 : index - 1)}><AiOutlineLeft className='mx-[0.5vw]' /></div>
-              <AppWithZoomCustomization image={product.variants[selectedcolor].img[index]} />
+              <AppWithZoomCustomization image={!wood ? product.variants[selectedcolor].img[index] : type=="35mm" ? data[selectedcolor].img : data1[selectedcolor].img} />
               <div className='h-[50.6vw] cursor-pointer absolute top-[51.5vw] z-30 flex items-center   text-[3vw] left-[43.4vw] opacity-70 hover:backdrop-blur-sm hover:opacity-100 text-white transition-all duration-150   ' onClick={() => setindex(index == i ? index : index + 1)}><AiOutlineRight  className='mx-[0.5vw]' /></div>
               </div>}
            
            
-           {!sw && <img src={product.variants[selectedcolor].img} className=" scale-75"></img>}
+           {!sw && <div>{!wood ? <img src={product.variants[selectedcolor].img} className=" scale-75"></img>: type=="35mm" ? <img src={data[selectedcolor].img} className=" scale-75"></img>:<img src={data1[selectedcolor].img} className=" scale-75"></img>}</div>}
      
             
 
@@ -221,7 +224,7 @@ useEffect(() => {
                 </div>
                 <div  className='ml-8 '>
                   <p className='leading-loose '>{product.category}</p>
-                  <p className='leading-loose '>{product.variants[selectedcolor].color}</p>
+                  <p className='leading-loose '>{!wood ?product.variants[selectedcolor].color: type=="35mm" ? data[selectedcolor].color : data1[selectedcolor].color}</p>
                   <p className='leading-loose '>{selectedheight}{selectedexactheight} Meters</p>
                   <p className='leading-loose '>{selectedwidth}{selectedexactwidth} Meters</p>
                   <p className='leading-loose '>{mechanism}</p>
@@ -242,15 +245,15 @@ useEffect(() => {
            
             <div style={sw?{padding:"0vw 2.5vw",marginBottom:"1.875vw"}:{padding:"0vh 2.5vh",marginBottom:"1.875vh"}} className="  w-full px-8 mb-6 bg-white  ">
               <div style={sw?{fontSize:"1.25vw",marginTop:"1.25vw"}:{fontSize:"2vh",marginTop:"1.25vh"}} className='  font-medium mt-4  flex items-center'><p style={sw?{backgroundColor: "#bfb1c4", fontFamily: "'poppins', sans-serif",height:"1vw",width:"2.75vw",marginLeft:"-3.2vw"}:{backgroundColor: "#bfb1c4", fontFamily: "'poppins', sans-serif",height:"1vh",width:"2.75vh",marginLeft:"-3.2vh"}}  className='w-8 -ml-10 absolute h-3'></p>Color Selection
-              {wood && <div className='flex justify-around w-4/6 '><p className='hover:cursor-pointer hover:font-bold underline underline-offset-4' onClick={()=>settype("35mm")}>35MM</p><option className='hover:cursor-pointer hover:font-bold underline underline-offset-4' onClick={()=>settype("50mm")}>50MM</option></div>}
+              {wood && <div className='flex justify-around w-4/6 '><p className='hover:cursor-pointer hover:font-bold underline underline-offset-4' id='35mm' onClick={()=>{settype("35mm");setselectedcolor(0);document.getElementById(0).classList.add("border-2");document.getElementById("35mm").classList.add("underline");document.getElementById("50mm").classList.remove("underline")}}>35MM</p><option className='hover:cursor-pointer hover:font-bold  underline-offset-4' id='50mm' onClick={()=>{settype("50mm");setselectedcolor(0);document.getElementById(0).classList.add("border-2");document.getElementById("50mm").classList.add("underline");document.getElementById("35mm").classList.remove("underline")}}>50MM</option></div>}
               </div>
               <div style={sw?{height:"30vw"}:{height:"30vh",marginTop:"2vh"}} className='flex justify-center overflow-y-scroll '>
               <div className='  grid grid-flow-row w-full  grid-cols-2 2xl:grid-cols-3'>
                 {
-                  !wood && Object.keys(product.variants).map((p) => { return <div key={p} ><div id={p} onClick={(e) => { selectcolor(e) }} style={sw?{ backgroundImage: `url(${product.variants[p].colorcode})`, borderColor: "red",height:"20vh",width:"10vw"}:{ backgroundImage: `url(${product.variants[p].colorcode})`, borderColor: "red",height:"20vw",width:"10vh"}} className="  mt-8  cursor-pointer "></div><span style={sw?{fontSize:"1.1vw"}:{fontSize:"1.1vh"}}>{product.variants[p].color}</span></div> })
+                  !wood ? Object.keys(product.variants).map((p) => { return <div key={p} ><div id={p} onClick={(e) => { selectcolor(e) }} style={sw?{ backgroundImage: `url(${product.variants[p].colorcode})`, borderColor: "red",height:"20vh",width:"10vw"}:{ backgroundImage: `url(${product.variants[p].colorcode})`, borderColor: "red",height:"20vw",width:"10vh"}} className="  mt-8  cursor-pointer "></div><span style={sw?{fontSize:"1.1vw"}:{fontSize:"1.1vh"}}>{product.variants[p].color}</span></div> })
 
-                  // :type=="35mm"?Object.keys(Product.variants).map((p) => { return <div key={p} ><div id={p} onClick={(e) => { selectcolor(e) }} style={sw?{ backgroundImage: `url(${data[p].colorcode})`, borderColor: "red",height:"20vh",width:"10vw"}:{ backgroundImage: `url(${data[p].colorcode})`, borderColor: "red",height:"20vw",width:"10vh"}} className="  mt-8  cursor-pointer "></div><span style={sw?{fontSize:"1.1vw"}:{fontSize:"1.1vh"}}>{data[p].color}</span></div> }):
-                  // Object.keys(data1).map((p) => { return <div key={p} ><div id={p} onClick={(e) => { selectcolor(e) }} style={sw?{ backgroundImage: `url(${data1[p].colorcode})`, borderColor: "red",height:"20vh",width:"10vw"}:{ backgroundImage: `url(${data1[p].colorcode})`, borderColor: "red",height:"20vw",width:"10vh"}} className="  mt-8  cursor-pointer "></div><span style={sw?{fontSize:"1.1vw"}:{fontSize:"1.1vh"}}>{data1[p].color}</span></div> })
+                   :type=="35mm"?Object.keys(data).map((p) => { return <div key={p} ><div id={p} onClick={(e) => { selectcolor(e) }} style={sw?{ backgroundImage: `url(${data[p].colorcode})`, borderColor: "red",height:"20vh",width:"10vw"}:{ backgroundImage: `url(${data[p].colorcode})`, borderColor: "red",height:"20vw",width:"10vh"}} className="  mt-8  cursor-pointer "></div><span style={sw?{fontSize:"1.1vw"}:{fontSize:"1.1vh"}}>{data[p].color}</span></div> }):
+                   Object.keys(data1).map((p) => { return <div key={p} ><div id={p} onClick={(e) => { selectcolor(e) }} style={sw?{ backgroundImage: `url(${data1[p].colorcode})`, borderColor: "red",height:"20vh",width:"10vw"}:{ backgroundImage: `url(${data1[p].colorcode})`, borderColor: "red",height:"20vw",width:"10vh"}} className="  mt-8  cursor-pointer "></div><span style={sw?{fontSize:"1.1vw"}:{fontSize:"1.1vh"}}>{data1[p].color}</span></div> })
                 }
               
               </div>
@@ -426,15 +429,14 @@ export async function getServerSideProps(context) {
   let m2 = await Motor.find({ subcategory:{$in:["DM35-RL-6/28","DM35-FY-6/28","DM35-SL-6/30"]} })
   let m3 = await Motor.find({ subcategory:"DM35-FY-6/28" })
   let m4 = await Motor.find({ subcategory:"DM35-SL-6/30" })
-  let data={}
-  let data1={}
-  // if(context.query.slug=="Wooden Venetian"){
-  //   data= await Product.find({ title: context.query.slug }).distinct("variants",{variants:{$exists:true}}).find({colorcode:{$exists:true},img:{$exists:true},price:{$exists:true},color:{$exists:true},$expr:{$gt:[{$strLenCP:'color'},3]}})
-  //    data1= await Product.find({ title: context.query.slug }).distinct("variants",{variants:{$exists:true}}).find({colorcode:{$exists:true},img:{$exists:true},price:{$exists:true},color:{$exists:true},$expr:{$gt:[{$strLenCP:'color'},3]}})
-  
-
-  // }
-console.log(data,data1)
+  let data=[]
+  let data1=[]
+  if(context.query.slug=="Wooden Venetian"){
+    for(let i=0;i<product.variants.length;i++){
+      if(product.variants[i].color.length==3) data.push(product.variants[i])
+      else data1.push(product.variants[i])
+    }
+   }
   return {
     props: { data: JSON.parse(JSON.stringify(data)),data1: JSON.parse(JSON.stringify(data1)),product: JSON.parse(JSON.stringify(product)),m1:JSON.parse(JSON.stringify(m1)),m2:JSON.parse(JSON.stringify(m2)),m3:JSON.parse(JSON.stringify(m3)),m4:JSON.parse(JSON.stringify(m4)) }, // will be passed to the page component as props
   }
