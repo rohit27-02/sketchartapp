@@ -433,8 +433,8 @@ export async function getServerSideProps(context) {
   let data1=[]
   if(context.query.slug=="Wooden Venetian"){
     for(let i=0;i<product.variants.length;i++){
-      if(product.variants[i].color.length==3) data.push(product.variants[i])
-      else data1.push(product.variants[i])
+      if(product.variants[i].color.length==3) data1.push(product.variants[i])
+      else data.push(product.variants[i])
     }
    }
   return {
