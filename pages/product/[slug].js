@@ -268,16 +268,18 @@ useEffect(() => {
                 </div>
                 </div>
              
-              <div style={sw?{marginTop:"1.875vw 0vw",paddingTop:"1.6vw"}:{marginTop:"1.875vh 0vw",paddingTop:"1.6vh"}} className="flex flex-col md:flex-row justify-between items-center  pt-5">
+              <div style={sw?{marginTop:"1.875vw 0vw",paddingTop:"1.6vw"}:{marginTop:"1.875vh 0vw",paddingTop:"1.6vh"}} className="flex flex-col md:flex-row justify-between md:items-center  pt-5">
               <div style={sw?{fontSize:"1.25vw"}:{fontSize:"1.5vh"}}> Your Price
-              <span style={sw?{fontFamily: "'Fjalla One', sans-serif",fontSize:"1.58vw"}:{fontFamily: "'Fjalla One', sans-serif",fontSize:"2vh"}} className="title-font ml-4  text-xl text-gray-900">₹ {product.variants[selectedcolor].price*qty}</span>
+              <span style={sw?{fontFamily: "'Fjalla One', sans-serif",fontSize:"1.58vw"}:{fontFamily: "'Fjalla One', sans-serif",fontSize:"2vh"}} className="title-font ml-4  text-xl text-gray-900">₹ {product.variants[selectedcolor].price*qty}<span className='text-[1.2vh] md:text-[1.2vw]'>/sqft</span>{!sw && <span className=' mb-[1.875vw] ml-[2vh] text-[1.3vh]'>( *Gst Inclusive )</span>}</span>
+              
               </div>
-              <div className='flex space-x-4 mt-4 md:mt-0'>
+              <div className='flex space-x-4 mt-4 md:mt-0 mb-[1.875vh] md:mb-0'>
               <button style={sw?{ backgroundColor: "#bfb1c4" ,fontSize:"1.1vw",width:"8.75vw",height:"2.8125vw"}:{ backgroundColor: "#bfb1c4" ,fontSize:"1.5vh",width:"10vh",height:"3.5vh"}} className="flex items-center border-0 md:py-2 py-1 w-28 justify-center focus:outline-none text-white " onClick={() => { buyNow(product.slug,qty, product.price, product.title, cartheight, cartwidth, product.variants[selectedcolor].color,motor ,product.variants[selectedcolor].img) }}>Buy now</button>
               <button style={sw?{ backgroundColor: "#bfb1c4" ,fontSize:"1.1vw",width:"8.75vw",height:"2.8125vw"}:{ backgroundColor: "#bfb1c4" ,fontSize:"1.5vh",width:"10vh",height:"3.5vh"}} onClick={() => { addToCart(product.slug, qty, product.price, product.title,cartheight, cartwidth, product.variants[selectedcolor].color, motor ,product.variants[selectedcolor].img) }} className="flex items-center   border-0 md:py-2 py-1 w-28 justify-center focus:outline-none text-white  ">Add to cart</button>
+         
               </div>
             </div>
-              <div className='mb-[1.875vw] text-[1vw]'>( *Gst Inclusive )</div>
+              {sw && <div className=' mb-[1.875vw] text-[1vh] md:text-[1vw]'>( *Gst Inclusive )</div>}
             </div>
             </div>
 
@@ -372,9 +374,9 @@ useEffect(() => {
                         {withmotor && Object.keys(recomendedmotors).map((m)=>{return <><div   id={recomendedmotors[m].slug}  style={sw?{fontFamily:"'lato',san-serif",borderColor:"#bfb1c4",height:"17vw",marginRight:"1.875vw",marginTop:"2vw",padding:"0.5vw"}:{fontFamily:"'lato',san-serif",borderColor:"#bfb1c4",height:"17vh",marginRight:"1.875vh",marginTop:"2vh",padding:"0.5vh"}} className='flex btn w-full border-2  ' key={m}>
                         <img style={sw?{width:"10vw"}:{width:"10vh"}} src={recomendedmotors[m].poster}></img>
                         <div  className='md:ml-[1vw]  ml-[1vh]'>
-                        <span style={sw?{margin:"1vw 0vw",fontFamily: "'Fjalla One', sans-serif"}:{margin:"1vh 0vh",fontFamily: "'Fjalla One', sans-serif"}} className="h-full text-[1.8vh] md:text-[1.5vw] w-full underline-offset-8 underline">{recomendedmotors[m].title}</span>
-                        <div className='overflow-y-scroll scrollbar-hide h-[8vw]  m-[1vw]'>{Object.keys(recomendedmotors[m].features).map((p)=>{return <li key={recomendedmotors[m].features[p]} className='text-[1vh] md:mt-[1vw] mt-[1vh] md:text-[1vw]' style={{fontFamily:"'poppins',sans-seif"}}>{recomendedmotors[m].features[p]}</li>})}</div>
-                        <div className='flex justify-between border-t py-[1vw] border-slate-600'>
+                        <span style={sw?{margin:"1vw 0vw",fontFamily: "'Fjalla One', sans-serif"}:{margin:"1vh 0vh",fontFamily: "'Fjalla One', sans-serif"}} className="h-full text-[1.8vh] md:text-[1.5vw] w-full md:underline-offset-8 underline">{recomendedmotors[m].title}</span>
+                        <div className='overflow-y-scroll scrollbar-hide h-[8vh] md:h-[8vw]  m-[1vw]'>{Object.keys(recomendedmotors[m].features).map((p)=>{return <li key={recomendedmotors[m].features[p]} className='text-[1vh] md:mt-[1vw] mt-[1vh] md:text-[1vw]' style={{fontFamily:"'poppins',sans-seif"}}>{recomendedmotors[m].features[p]}</li>})}</div>
+                        <div className='flex justify-between border-t py-[1vw] border-gray-500'>
                       <a className='md:text-[1vw] underline hover:text-[#bfb1c4]' href={`/motors/${recomendedmotors[m]._id}`}>Learn More</a>
                         
                         <span className="  "><span className='text-[1vh] md:text-[1vw]'>Price :</span> ₹ {recomendedmotors[m].price}
