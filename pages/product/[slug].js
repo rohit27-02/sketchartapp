@@ -274,7 +274,7 @@ useEffect(() => {
              
               <div style={sw?{marginTop:"1.875vw 0vw",paddingTop:"1.6vw"}:{marginTop:"1.875vh 0vw",paddingTop:"1.6vh"}} className="flex flex-col md:flex-row justify-between md:items-center  pt-5">
               <div style={sw?{fontSize:"1.25vw"}:{fontSize:"1.5vh"}}> Your Price
-              <span style={sw?{fontFamily: "'Fjalla One', sans-serif",fontSize:"1.58vw"}:{fontFamily: "'Fjalla One', sans-serif",fontSize:"2vh"}} className="title-font ml-4  text-xl text-gray-900">₹ {product.variants[selectedcolor].price*qty}<span className='text-[1.2vh] md:text-[1.2vw]'>/sqft</span>{!sw && <span className=' mb-[1.875vw] ml-[2vh] text-[1.3vh]'>( *Gst Inclusive )</span>}</span>
+              <span style={sw?{fontFamily: "'Fjalla One', sans-serif",fontSize:"1.58vw"}:{fontFamily: "'Fjalla One', sans-serif",fontSize:"2vh"}} className="title-font ml-4  text-xl text-gray-900">₹ {(product.variants[selectedcolor].price*qty).toFixed(1)}<span className='text-[1.2vh] md:text-[1.2vw]'>/sqft</span>{!sw && <span className=' mb-[1.875vw] ml-[2vh] text-[1.3vh]'>( *Gst Inclusive )</span>}</span>
               
               </div>
               <div className='flex space-x-4 mt-4 md:mt-0 mb-[1.875vh] md:mb-0'>
