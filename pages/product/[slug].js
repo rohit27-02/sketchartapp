@@ -205,9 +205,13 @@ useEffect(() => {
               </div>}
            
            
-           {!sw && <div>{!wood ? <img src={product.variants[selectedcolor].img} className=" scale-75"></img>: type=="35mm" ? <img src={data[selectedcolor].img} className=" scale-75"></img>:<img src={data1[selectedcolor].img} className=" scale-75"></img>}</div>}
-     
-            
+           {!sw && 
+           <div>
+            <div className='h-[40.2vh]  cursor-pointer absolute top-[7.7vh]  z-30 flex items-center   text-[3vh] left-[3vh] opacity-70 hover:backdrop-blur-sm hover:opacity-100  text-white transition-all duration-150   '  onClick={() => setindex(index == 0 ? 0 : index - 1)}><AiOutlineLeft className='mx-[0.5vw]' /></div>
+           <div >{!wood ? <img src={product.variants[selectedcolor].img[index]} className="p-[3vh]"></img>: type=="35mm" ? <img src={data[selectedcolor].img} className=" scale-75"></img>:<img src={data1[selectedcolor].img} className=" scale-75"></img>}</div>
+           <div className='h-[40.2vh] cursor-pointer absolute top-[7.7vh] z-30 flex items-center   text-[3vh] right-[3vh] opacity-70 hover:backdrop-blur-sm hover:opacity-100 text-white transition-all duration-150   ' onClick={() => setindex(index == i ? index : index + 1)}><AiOutlineRight  className='mx-[0.5vw]' /></div>
+           </div>
+}
 
             <div style={sw?{fontSize:"1.1vw",paddingLeft:"1.875vw"}:{fontSize:"1.5vh",paddingLeft:"3.5vh"}} className='w-full pl-6  pb-4'>
               
