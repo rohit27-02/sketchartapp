@@ -19,7 +19,7 @@ import { useState, Fragment } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect } from 'react';
-import { MdCancel } from 'react-icons/md';
+import { MdCancel, MdUpdate } from 'react-icons/md';
 import Router from 'next/router';
 const AWS = require('aws-sdk');
 
@@ -62,8 +62,9 @@ const adminpanel = ({ logout, remotes, motors, switches, products, users, info, 
   const [product, setproduct] = useState("blind");
   const [type, settype] = useState("");
   const [drop, setdrop] = useState(false);
-  const [ui, setui] = useState(false);
   const [i, seti] = useState();
+  const [ui, setui] = useState(false);
+  const [confirm, setconfirm] = useState(false);
   const [i2, seti2] = useState();
   const ID = "AKIA6QMMEE6ODDBYMP77";
   const SECRET = "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";
@@ -272,6 +273,24 @@ const removeimg=(e)=>{
   variants[i].img.splice(e.currentTarget.id,1)
 }
 
+const removevariant=async(e)=>{
+ products[e.currentTarget.value].variants.splice(e.currentTarget.id,1)
+ seti(e.currentTarget.value)
+ setpid(products[e.currentTarget.value]._id)
+ setconfirm(true)
+}
+const send=async()=>{
+  const data = products[i].variants
+  console.log(data)
+  let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/removevariant`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    }, body: JSON.stringify({ pid, data })
+  })
+
+}
+
   const handleSubmit = async (e) => {
 
     e.preventDefault()
@@ -300,7 +319,7 @@ const removeimg=(e)=>{
       if (index != null && ready) {
 
         const data = [{ title, desc, poster, tagline, variants, category, care, sub, slug, price, subcategory }]
-
+        console.log(data)
         let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/updateproducts`, {
           method: "POST",
           headers: {
@@ -853,6 +872,9 @@ const removeimg=(e)=>{
                       </div>
   </form>
   </div>}
+  {confirm && <div onClick={()=>setconfirm(false)} className='fixed h-[100vh] z-50 w-[100vw]   flex justify-center items-center '>
+    <div className='flex space-y-[2vw] justify-center p-[2vw] text-[2vw] drop-shadow-lg border border-black bg-white flex-col'>Do you want to delete this variant <button onClick={send} className='text-red-500 hover:bg-red-500 hover:text-white transition-all duration-500'>Delete</button></div>
+    </div>}
 
         <Transition appear show={isOpen} as={Fragment}>
           <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -1495,7 +1517,7 @@ const removeimg=(e)=>{
                           {products[p].subcategory}
                         </td>
                         <td className="  flex justify-center overflow-y-scroll h-[17vw]">
-                          <div className='  grid grid-flow-row w-full  grid-cols-2   '>{products[p].variants.map((i,m) => { return <div className='mb-[2vw] h-[15vw] w-[10vw]' key={i}><button className='cursor-pointer  -mb-[1.5vw] ml-[10.5vw] ' value={p} id={m} onClick={(e)=>{updateimg(e);}}><MdCancel/></button><img  src={i.img[0]} />{i.color}<br></br><span className='drop-shadow-xl bg-yellow-300 px-[0.5vw]'>₹ {i.price}</span></div> })}</div>
+                          <div className='  grid grid-flow-row w-full  grid-cols-2   '>{products[p].variants.map((i,m) => { return <div className='mb-[2vw] h-[15vw] w-[10vw]' key={i}><div className='mb-[0.6vw] w-full justify-between flex'><button className='cursor-pointer  ' value={p} id={m} onClick={(e)=>{updateimg(e);}}><GrDocumentUpdate/></button><button className='cursor-pointer   ' value={p} id={m} onClick={function(e){removevariant(e);}}><MdCancel/></button></div><img  src={i.img[0]} />{i.color}<br></br><span className='drop-shadow-xl bg-yellow-300 px-[0.5vw]'>₹ {i.price}</span></div> })}</div>
                         </td>
                         <td className="text-xl text-gray-900 font-light px-6 py-4 whitespace-nowrap">
 
