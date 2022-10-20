@@ -50,7 +50,7 @@ const adminpanel = ({ logout, remotes, motors, switches, products, users, info, 
   const [address, setaddress] = useState("");
   const [phone, setphone] = useState("");
   const [ready, setready] = useState(false);
-  const [img, setimg] = useState("");
+  const [img, setimg] = useState([]);
   const [poster, setposter] = useState("");
   const [care, setcare] = useState("");
   const [feature, setfeature] = useState("");
@@ -62,8 +62,9 @@ const adminpanel = ({ logout, remotes, motors, switches, products, users, info, 
   const [product, setproduct] = useState("blind");
   const [type, settype] = useState("");
   const [drop, setdrop] = useState(false);
-  const [gallery, setgallery] = useState([]);
-
+  const [ui, setui] = useState(false);
+  const [i, seti] = useState();
+  const [i2, seti2] = useState();
   const ID = "AKIA6QMMEE6ODDBYMP77";
   const SECRET = "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";
   const BUCKET_NAME = 'sketchartphotos';
@@ -80,9 +81,11 @@ const adminpanel = ({ logout, remotes, motors, switches, products, users, info, 
     }
 
   }, []);
+
   useEffect(() => {
     setready(true)
   }, [pid]);
+
   useEffect(() => {
     if (type=="blind" && au==false  && isOpen) {
       settitle(products[index].title)
@@ -94,7 +97,6 @@ const adminpanel = ({ logout, remotes, motors, switches, products, users, info, 
       setcare(products[index].care)
       setposter(products[index].poster)
       settagline(products[index].tagline)
-      setgallery(products[index].gallery)
       setsub(products[index].sub)
     }
     else if(type=="remote" && au3==false  && isOpen3 ){
@@ -187,13 +189,13 @@ const adminpanel = ({ logout, remotes, motors, switches, products, users, info, 
     setslug("")
     setcolor("")
     setcolorcode("")
-    setimg("")
+    setimg([])
     setcare("")
     setposter("")
     settagline("")
     setfeatures([])
     setspecs([])
-    setgallery([])
+
   }
   const selectedproduct = (event) => {
     setau(false)
@@ -241,11 +243,40 @@ const adminpanel = ({ logout, remotes, motors, switches, products, users, info, 
     setIsOpen4(true)
   }
 
+  const updateimg=async(e)=>{
+    seti(e.currentTarget.id);
+    setindex(e.currentTarget.value)
+    seti2(products[e.currentTarget.value]._id)
+    setpid(products[e.currentTarget.value].variants[e.currentTarget.id]._id)
+    setvariants(products[e.currentTarget.value].variants)
+    setcolor(products[e.currentTarget.value].variants[e.currentTarget.id].color)
+    setprice(products[e.currentTarget.value].variants[e.currentTarget.id].price)
+    setimg(products[e.currentTarget.value].variants[e.currentTarget.id].img)
+    setcolorcode(products[e.currentTarget.value].variants[e.currentTarget.id].colorcode)
+    setui(true)
+
+  }
+const changeimg=async(e)=>{
+  e.preventDefault()
+  const data = [{ color,colorcode,img,price}]
+
+    let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/updateimg`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      }, body: JSON.stringify({ i2,pid, data })
+    })
+    Router.push("/adminpanel")
+}
+const removeimg=(e)=>{
+  variants[i].img.splice(e.currentTarget.id,1)
+}
+
   const handleSubmit = async (e) => {
 
     e.preventDefault()
     if (au) {
-      const data = [{ title, desc, poster, tagline, variants, gallery, category, care, slug,  subcategory }]
+      const data = [{ title, desc, poster, tagline, variants, category, care, slug,  subcategory }]
       let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/addproducts`, {
         method: "POST",
         headers: {
@@ -268,7 +299,7 @@ const adminpanel = ({ logout, remotes, motors, switches, products, users, info, 
     else {
       if (index != null && ready) {
 
-        const data = [{ title, desc, poster, tagline, gallery, variants, category, care, sub, slug, price, subcategory }]
+        const data = [{ title, desc, poster, tagline, variants, category, care, sub, slug, price, subcategory }]
 
         let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/updateproducts`, {
           method: "POST",
@@ -556,34 +587,6 @@ const adminpanel = ({ logout, remotes, motors, switches, products, users, info, 
     });
     Router.push("/adminpanel")
   }
-  async function upload(e) {
-
-    var file = document.getElementById('img');
-    const params = {
-      Bucket: BUCKET_NAME,
-      Key: file.files[0].name, // File name you want to save as in S3
-      Body: file.files[0]
-  };
-  s3.upload(params, function(err, data) {
-    if (err) {
-        throw err;
-    }
-    setimg(data.Location)
-      toast.success('Image uploaded', {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    
-});
-   
-  
-
-  }
   async function upload2(e) {
     var file = document.getElementById('poster');
     const params = {
@@ -638,9 +641,9 @@ const adminpanel = ({ logout, remotes, motors, switches, products, users, info, 
    
   
   }
-  async function upload3(e) {
+  async function upload(e) {
 
-    var file = document.getElementById('gallery');
+    var file = document.getElementById('img');
 
     Object.keys(file.files).map((p)=>{
       
@@ -654,7 +657,7 @@ const adminpanel = ({ logout, remotes, motors, switches, products, users, info, 
           throw err;
       }
      else{ 
-      setgallery(arr=>[...arr,data.Location])
+      setimg(arr=>[...arr,data.Location])
      
       }
   });
@@ -670,9 +673,6 @@ const adminpanel = ({ logout, remotes, motors, switches, products, users, info, 
       progress: undefined,
     });
   }
-useEffect(() => {
- console.log(gallery)
-}, [gallery]);
 
   async function uploadposter() {
 
@@ -755,21 +755,16 @@ useEffect(() => {
     setvariants(arr => [...arr, { color: color, colorcode: colorcode, img: img ,price:price}])
     document.getElementById("colorcode").value = ""
     document.getElementById("img").value = ""
-  }
-
-  useEffect(() => {
     setcolor("")
-    setimg("")
+    setimg([])
     setprice(0)
     setcolorcode("")
-  }, [variants]);
-
+  }
   function addfeature() {
 
     setfeatures(arr => [...arr, feature])
 
   }
-
   useEffect(() => {
     setfeature("")
   }, [features]);
@@ -800,6 +795,64 @@ useEffect(() => {
           pauseOnHover
         />
 
+{ui && <div className='fixed h-[100vh] z-50 w-[100vw]   flex justify-center items-center '>
+   <form>
+    <MdCancel className='absolute text-[2vw] mt-[0.5vw] cursor-pointer right-[35vw]' onClick={()=>{setui(false);closeModal();}} />
+   <div className='flex flex-col p-[1vw] bg-white border-2 border-black pt-6'>
+                        <div className="md:flex  md:items-center mb-6">
+                          <div className="">
+                            <label className="block text-gray-500 font-bold text-center mb-1 md:mb-0 pr-4" htmlFor="color">
+                              Color
+                            </label>
+                          </div>
+                          <div className="">
+                            <input value={color} onChange={(e) => handleChange(e)} className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-yellow-500" id="color" type="text" />
+
+                          </div>
+                        </div>
+                        <div className="md:flex md:items-center mb-6">
+                          <div className="">
+                            <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" htmlFor="colorcode">
+                              colorcode
+                            </label>
+                          </div>
+                          <div className="">
+                            <input onChange={uploadposter} className="" id="colorcode" type="file" accept='image/*' />
+
+                          </div>
+                        </div>
+                       
+                        <div className="md:flex md:items-center  mb-6">
+                          <div className="">
+                            <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" htmlFor="img">
+                              Image
+                            </label>
+                          </div>
+                          <div className="">
+                            <input onChange={(e) => upload(e)} type="file" id="img" multiple="multiple" accept="image/*" />
+
+                          </div>
+                        </div>
+                        <div className="md:flex md:items-center mb-6">
+                        <div className="">
+                          <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" htmlFor="price">
+                            Price
+                          </label>
+                        </div>
+                        <div className="">
+                          <input value={price} onChange={(e) => handleChange(e)} className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-yellow-500" id="price" type="number" />
+                        </div>
+                      </div>
+                      <div className='w-full flex '>
+                          {Object.keys(variants[i].img).map((p)=>{return <div className='ml-[0.5vw]'  key={p}><MdCancel id={p} onClick={(e)=>removeimg(e)} className='cursor-pointer'/><img className='w-[6vw]  h-auto'  src={variants[i].img[p]}></img></div>})}
+                        </div>
+                   
+                      <button onClick={(e)=>changeimg(e)} className="shadow mt-[2vw] bg-yellow-400 p-[1vw] hover:bg-yellow-300 focus:shadow-outline focus:outline-none text-white font-bold rounded" type="submit">
+                              update 
+                            </button>
+                      </div>
+  </form>
+  </div>}
 
         <Transition appear show={isOpen} as={Fragment}>
           <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -887,16 +940,7 @@ useEffect(() => {
                           <textarea value={desc} onChange={(e) => handleChange(e)} className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-yellow-500" id="desc" type="text" />
                         </div>
                       </div>
-                      <div className="md:flex md:items-center mb-6">
-                        <div className="md:w-2/6">
-                          <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" htmlFor="gallery">
-                            Gallery
-                          </label>
-                        </div>
-                        <div className="md:w-4/6">
-                          <input onChange={upload3} type="file" className="" id="gallery" multiple="multiple"  directory="" webkitdirectory=""   />
-                        </div>
-                      </div>
+                    
                       <div className="md:flex md:items-center mb-6">
                         <div className="md:w-2/6">
                           <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" htmlFor="care">
@@ -958,7 +1002,7 @@ useEffect(() => {
                             </label>
                           </div>
                           <div className="md:w-fit">
-                            <input onChange={(e) => upload(e)} type="file" id="img" accept="image/*" />
+                            <input onChange={(e) => upload(e)} type="file" id="img" multiple="multiple" accept="image/*" />
 
                           </div>
                         </div>
@@ -992,7 +1036,6 @@ useEffect(() => {
             </div>
           </Dialog>
         </Transition>
-
 
         <Transition appear show={isOpen2} as={Fragment}>
           <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -1426,10 +1469,6 @@ useEffect(() => {
                       <th scope="col" className="text-sm font-medium text-white px-6 py-4">
                         subcategory
                       </th>
-                      {/*  <th scope="col" className="text-sm font-medium text-white px-6 py-4">
-                        sizes
-                  </th>*/}
-
                       <th className="text-sm  font-medium text-white px-6 py-4">
                         Image
                       </th>
@@ -1455,13 +1494,8 @@ useEffect(() => {
                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                           {products[p].subcategory}
                         </td>
-                        {/*  <td className="text-sm grid grid-flow-col  text-gray-900 font-light px-6 py-4 space-x-1 whitespace-nowrap">
-                         <div>{products[p].height.map((i)=>{ return <div key={i}>{i} x </div>}) }</div>
-                         <div>{products[p].width.map((i)=>{ return <div key={i}>{i}  </div>}) }</div>
-                  </td>*/}
-
                         <td className="  flex justify-center overflow-y-scroll h-[17vw]">
-                          <div className='  grid grid-flow-row w-full  grid-cols-2   '>{products[p].variants.map((i) => { return <div className='mb-[2vw] h-[15vw] w-[10vw]' key={i}><img src={i.img} />{i.color}<br></br>{i.price}</div> })}</div>
+                          <div className='  grid grid-flow-row w-full  grid-cols-2   '>{products[p].variants.map((i,m) => { return <div className='mb-[2vw] h-[15vw] w-[10vw]' key={i}><button className='cursor-pointer  -mb-[1.5vw] ml-[10.5vw] ' value={p} id={m} onClick={(e)=>{updateimg(e);}}><MdCancel/></button><img  src={i.img[0]} />{i.color}<br></br><span className='drop-shadow-xl bg-yellow-300 px-[0.5vw]'>₹ {i.price}</span></div> })}</div>
                         </td>
                         <td className="text-xl text-gray-900 font-light px-6 py-4 whitespace-nowrap">
 
